@@ -1,0 +1,23 @@
+{
+  "name": "DIG SITE 404 — The Buried Crossroads",
+  "short_name": "DIG SITE 404",
+  "description": "An interactive archaeological expedition game for learning Agile and Scrum concepts.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F3EBDD",
+  "theme_color": "#633C2E",
+  "orientation": "portrait",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

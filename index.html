@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="DIG SITE 404 — An interactive archaeological reconstruction game."
+    />
+
+    <meta name="theme-color" content="#A64B32" />
+
+    <title>DIG SITE 404 | The Buried Crossroads</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <main id="app">
+      <!-- =========================================
+             LANDING / MISSION SCREEN
+             ========================================= -->
+
+      <section
+        id="screen-mission"
+        class="screen active"
+        aria-labelledby="game-title"
+      >
+        <header class="game-header">
+          <div class="site-mark">
+            <span class="site-number">404</span>
+            <span class="site-label">ARCHAEOLOGICAL EXPEDITION</span>
+          </div>
+
+          <div class="header-rule"></div>
+        </header>
+
+        <div class="mission-layout">
+          <div class="mission-intro">
+            <p class="eyebrow">FIELD RECORD · UNKNOWN SITE</p>
+
+            <h1 id="game-title">DIG SITE <span>404</span></h1>
+
+            <p class="subtitle">The Buried Crossroads</p>
+
+            <p class="mission-description">
+              An unidentified archaeological site has been uncovered. Its
+              history is incomplete, its evidence is fragmented, and every
+              discovery may change what you think you know.
+            </p>
+          </div>
+
+          <div class="mission-panel">
+            <div class="panel-heading">
+              <span class="panel-index">01</span>
+              <h2>EXPEDITION BRIEF</h2>
+            </div>
+
+            <p>
+              Your team has been assigned to reconstruct the purpose and nature
+              of the site using limited investigation resources.
+            </p>
+
+            <div class="mission-details">
+              <div class="detail-item">
+                <span class="detail-label"> INVESTIGATION POINTS </span>
+
+                <strong>15</strong>
+              </div>
+
+              <div class="detail-item">
+                <span class="detail-label"> EXPEDITION ROUNDS </span>
+
+                <strong>03</strong>
+              </div>
+
+              <div class="detail-item">
+                <span class="detail-label"> SITE STATUS </span>
+
+                <strong>UNRESOLVED</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mission-objective">
+          <div class="objective-marker">OBJECTIVE</div>
+
+          <p>
+            Investigate the evidence. Reconstruct the site. Adapt when new
+            discoveries challenge your assumptions.
+          </p>
+        </div>
+
+        <div class="mission-action">
+          <label for="team-name"> EXPEDITION TEAM </label>
+
+          <div class="team-entry">
+            <input
+              type="text"
+              id="team-name"
+              name="team-name"
+              placeholder="Enter your team name"
+              maxlength="30"
+              autocomplete="off"
+            />
+
+            <button type="button" id="start-game">ENTER SITE</button>
+          </div>
+
+          <p id="team-error" class="form-message" aria-live="polite"></p>
+        </div>
+
+        <footer class="game-footer">
+          <span>DIG SITE 404</span>
+
+          <span>FIELD ARCHIVE · 01</span>
+        </footer>
+      </section>
+
+      <!-- =========================================
+             EXPEDITION / GAME SCREEN
+             ========================================= -->
+
+      <section
+        id="screen-expedition"
+        class="screen"
+        aria-labelledby="expedition-title"
+        hidden
+      >
+        <header class="game-header">
+          <div class="game-header-left">
+            <div class="site-mark">404</div>
+
+            <span class="game-section-label"> FIELD EXPEDITION </span>
+          </div>
+
+          <div class="game-header-right">
+            <div class="header-stat">
+              <span class="header-stat-label"> TEAM </span>
+
+              <span class="header-stat-value" id="header-team"> — </span>
+            </div>
+
+            <div class="header-stat">
+              <span class="header-stat-label"> ROUND </span>
+
+              <span class="header-stat-value" id="header-round"> 01 / 03 </span>
+            </div>
+
+            <div class="header-stat">
+              <span class="header-stat-label"> POINTS </span>
+
+              <span class="header-stat-value" id="header-points"> 15 </span>
+            </div>
+          </div>
+        </header>
+
+        <div class="expedition-heading">
+          <p class="eyebrow">CURRENT EXPEDITION</p>
+
+          <h1 id="expedition-title">Investigation Site</h1>
+
+          <p>Choose where your team will direct its next investigation.</p>
+        </div>
+
+        <section
+          id="evidence-grid"
+          class="evidence-grid"
+          aria-label="Available investigations"
+        >
+          <!-- Evidence cards will be generated by JavaScript -->
+        </section>
+
+        <aside id="event-panel" class="event-panel" hidden aria-live="polite">
+          <!-- Events will be generated by JavaScript -->
+        </aside>
+
+        <footer class="game-footer">
+          <span id="expedition-status"> INVESTIGATION IN PROGRESS </span>
+
+          <span> FIELD ARCHIVE · 02 </span>
+        </footer>
+      </section>
+
+      <!-- =========================================
+             DISCOVERY SCREEN
+             ========================================= -->
+
+      <section
+        id="screen-discovery"
+        class="screen"
+        aria-labelledby="discovery-title"
+        hidden
+      >
+        <div class="discovery-layout">
+          <p class="eyebrow">FIELD DISCOVERY</p>
+
+          <div class="discovery-symbol" aria-hidden="true">✦</div>
+
+          <h1 id="discovery-title">Evidence Found</h1>
+
+          <p id="discovery-description">
+            <!-- Filled by JavaScript -->
+          </p>
+
+          <div id="discovery-details" class="discovery-details">
+            <!-- Filled by JavaScript -->
+          </div>
+
+          <button type="button" id="continue-discovery">
+            RECORD DISCOVERY
+          </button>
+        </div>
+      </section>
+
+      <!-- =========================================
+             EVENT / CHANGE SCREEN
+             ========================================= -->
+
+      <section
+        id="screen-event"
+        class="screen"
+        aria-labelledby="event-title"
+        hidden
+      >
+        <div class="event-layout">
+          <p class="eyebrow">EXPEDITION UPDATE</p>
+
+          <div class="event-symbol" aria-hidden="true">!</div>
+
+          <h1 id="event-title">Unexpected Development</h1>
+
+          <p id="event-description">
+            <!-- Filled by JavaScript -->
+          </p>
+
+          <div id="event-options" class="event-options">
+            <!-- Event choices generated by JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================
+             RECONSTRUCTION SCREEN
+             ========================================= -->
+
+      <section
+        id="screen-reconstruction"
+        class="screen"
+        aria-labelledby="reconstruction-title"
+        hidden
+      >
+        <header class="game-header">
+          <div class="site-mark">
+            <span class="site-number">404</span>
+            <span class="site-label"> FINAL RECONSTRUCTION </span>
+          </div>
+        </header>
+
+        <div class="reconstruction-layout">
+          <div class="reconstruction-heading">
+            <p class="eyebrow">EXPEDITION CONCLUSION</p>
+
+            <h1 id="reconstruction-title">Reconstruct the Site</h1>
+
+            <p>
+              Based on the evidence your team uncovered, what do you believe
+              this site was?
+            </p>
+          </div>
+
+          <div
+            id="site-options"
+            class="site-options"
+            role="radiogroup"
+            aria-label="Site interpretation"
+          >
+            <!-- Generated by JavaScript -->
+          </div>
+
+          <div class="evidence-selection">
+            <div class="panel-heading">
+              <span class="panel-index">02</span>
+              <h2>SELECT SUPPORTING EVIDENCE</h2>
+            </div>
+
+            <p>
+              Select the three pieces of evidence that most strongly support
+              your reconstruction.
+            </p>
+
+            <div id="final-evidence" class="final-evidence">
+              <!-- Generated by JavaScript -->
+            </div>
+          </div>
+
+          <button type="button" id="submit-reconstruction">
+            SUBMIT RECONSTRUCTION
+          </button>
+
+          <p
+            id="reconstruction-error"
+            class="form-message"
+            aria-live="polite"
+          ></p>
+        </div>
+      </section>
+
+      <!-- =========================================
+             RESULTS SCREEN
+             ========================================= -->
+
+      <section
+        id="screen-results"
+        class="screen"
+        aria-labelledby="results-title"
+        hidden
+      >
+        <header class="game-header">
+          <div class="site-mark">
+            <span class="site-number">404</span>
+            <span class="site-label"> EXPEDITION COMPLETE </span>
+          </div>
+        </header>
+
+        <div class="results-layout">
+          <p class="eyebrow">FIELD REPORT</p>
+
+          <h1 id="results-title">Expedition Complete</h1>
+
+          <p id="results-team">TEAM —</p>
+
+          <div class="results-reconstruction">
+            <span class="result-label"> YOUR RECONSTRUCTION </span>
+
+            <strong id="result-site"> — </strong>
+          </div>
+
+          <div class="score-grid">
+            <div class="score-item">
+              <span>Evidence Strength</span>
+              <strong id="score-evidence">—</strong>
+            </div>
+
+            <div class="score-item">
+              <span>Resource Management</span>
+              <strong id="score-resources">—</strong>
+            </div>
+
+            <div class="score-item">
+              <span>Adaptability</span>
+              <strong id="score-adaptability">—</strong>
+            </div>
+          </div>
+
+          <div class="final-score">
+            <span>EXPEDITION SCORE</span>
+
+            <strong id="score-total"> — </strong>
+          </div>
+
+          <div class="result-note">
+            <p>
+              Your reconstruction is based on the evidence available to your
+              team. Archaeological interpretation is strongest when conclusions
+              remain open to new evidence.
+            </p>
+          </div>
+
+          <button type="button" id="view-learning">VIEW FIELD NOTES</button>
+        </div>
+      </section>
+
+      <!-- =========================================
+             LEARNING / CONCEPT REVEAL SCREEN
+             ========================================= -->
+
+      <section
+        id="screen-learning"
+        class="screen"
+        aria-labelledby="learning-title"
+        hidden
+      >
+        <header class="game-header">
+          <div class="site-mark">
+            <span class="site-number">404</span>
+            <span class="site-label"> FIELD NOTES </span>
+          </div>
+        </header>
+
+        <div class="learning-layout">
+          <p class="eyebrow">WHAT YOU JUST EXPERIENCED</p>
+
+          <h1 id="learning-title">From Excavation to Agile</h1>
+
+          <p class="learning-intro">
+            Every decision you made during the expedition represents a principle
+            used in software development.
+          </p>
+
+          <div id="concept-map" class="concept-map">
+            <div class="concept-item">
+              <span>INVESTIGATION CHOICES</span>
+              <strong>Prioritisation</strong>
+            </div>
+
+            <div class="concept-item">
+              <span>LIMITED RESOURCES</span>
+              <strong>Sprint Capacity</strong>
+            </div>
+
+            <div class="concept-item">
+              <span>NEW DISCOVERIES</span>
+              <strong>Changing Requirements</strong>
+            </div>
+
+            <div class="concept-item">
+              <span>CHANGING STRATEGY</span>
+              <strong>Adaptation</strong>
+            </div>
+
+            <div class="concept-item">
+              <span>TEAM DISCUSSION</span>
+              <strong>Collaboration</strong>
+            </div>
+
+            <div class="concept-item">
+              <span>FINAL REVIEW</span>
+              <strong>Sprint Review</strong>
+            </div>
+
+            <div class="concept-item">
+              <span>WHAT WOULD YOU CHANGE?</span>
+              <strong>Retrospective</strong>
+            </div>
+          </div>
+
+          <div class="learning-conclusion">
+            <p>
+              You began with incomplete information. You made a plan, gathered
+              evidence, encountered unexpected information, changed your
+              priorities, and adapted.
+            </p>
+
+            <strong> That is the heart of Agile. </strong>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Application logic -->
+    <script src="data.js"></script>
+    <script src="game.js"></script>
+  </body>
+</html>
