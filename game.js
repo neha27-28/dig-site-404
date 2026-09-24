@@ -1,6 +1,6 @@
 /* ============================================================
    DIG SITE 404
-   PHASE 0 + PHASE 1
+   PHASE 0 + PHASE 1 + PHASE 2
    THE BURIED CROSSROADS
    ============================================================ */
 
@@ -20,6 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const discoveryScreen =
         document.getElementById("screen-discovery");
+
+    const eventScreen =
+        document.getElementById("screen-event");
 
     const teamNameInput =
         document.getElementById("team-name");
@@ -54,6 +57,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const discoveryDetails =
         document.getElementById("discovery-details");
 
+    const eventTitle =
+        document.getElementById("event-title");
+
+    const eventDescription =
+        document.getElementById("event-description");
+
+    const eventOptions =
+        document.getElementById("event-options");
+
+
+    /* ============================================================
+       GAME CONSTANTS
+       ============================================================ */
+
+    const STARTING_POINTS = 15;
+
+    const TOTAL_ROUNDS = 3;
+
+    /*
+     * Round 1 consists of three investigation decisions.
+     *
+     * This is deliberately three rather than "investigate
+     * everything", because the team must still have enough
+     * Investigation Points to investigate the Round 2 chamber.
+     */
+
+    const ROUND_1_INVESTIGATION_LIMIT = 3;
+
 
     /* ============================================================
        GAME STATE
@@ -61,15 +92,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const gameState = {
 
+        /* ---------------- Phase 0 ---------------- */
+
         teamName: "",
 
-        investigationPoints: 15,
+        investigationPoints:
+            STARTING_POINTS,
 
-        totalRounds: 3,
+        totalRounds:
+            TOTAL_ROUNDS,
 
         currentRound: 0,
 
         phase: 0,
+
+
+        /* ---------------- Investigation ---------------- */
 
         investigationsCompleted: [],
 
@@ -77,9 +115,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
         currentDiscovery: null,
 
+
+        /* ---------------- Phase 2 ---------------- */
+
+        phase2Started: false,
+
+        phase2EventTriggered: false,
+
+        ceremonialEvidenceUnlocked: false,
+
+        currentEvent: null,
+
+
+        /* ---------------- UI feedback ---------------- */
+
         lastInvestigationCost: 0,
 
-        lastPointsRemaining: 15
+        lastPointsRemaining:
+            STARTING_POINTS
 
     };
 
@@ -93,7 +146,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const screens = [
             missionScreen,
             expeditionScreen,
-            discoveryScreen
+            discoveryScreen,
+            eventScreen
         ];
 
         screens.forEach(element => {
@@ -118,25 +172,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* ============================================================
-       HEADER UPDATE
+       HEADER
        ============================================================ */
 
     function updateHeader() {
 
         if (headerTeam) {
+
             headerTeam.textContent =
                 gameState.teamName || "—";
+
         }
+
 
         if (headerRound) {
+
             headerRound.textContent =
                 `${String(gameState.currentRound).padStart(2, "0")} / ${String(gameState.totalRounds).padStart(2, "0")}`;
+
         }
 
+
         if (headerPoints) {
+
             headerPoints.textContent =
                 String(gameState.investigationPoints);
+
         }
+
     }
 
 
@@ -170,16 +233,10 @@ document.addEventListener("DOMContentLoaded", () => {
             enteredName;
 
         gameState.investigationPoints =
-            15;
+            STARTING_POINTS;
 
         gameState.totalRounds =
-            3;
-
-        /*
-         * Phase 0 is now complete.
-         *
-         * Phase 1 begins.
-         */
+            TOTAL_ROUNDS;
 
         gameState.currentRound =
             1;
@@ -196,26 +253,59 @@ document.addEventListener("DOMContentLoaded", () => {
         gameState.currentDiscovery =
             null;
 
+        gameState.phase2Started =
+            false;
+
+        gameState.phase2EventTriggered =
+            false;
+
+        gameState.ceremonialEvidenceUnlocked =
+            false;
+
+        gameState.currentEvent =
+            null;
+
         gameState.lastInvestigationCost =
             0;
 
         gameState.lastPointsRemaining =
-            15;
+            STARTING_POINTS;
 
 
         updateHeader();
 
-        renderPhase1Board();
+        renderCurrentBoard();
 
         showScreen(expeditionScreen);
     }
 
 
     /* ============================================================
-       PHASE 1 — INITIAL INVESTIGATIONS
+       EVIDENCE LOOKUP
        ============================================================ */
 
-    function getPhase1Investigations() {
+    function getEvidenceById(id) {
+
+        if (
+            typeof EVIDENCE_DATA === "undefined" ||
+            !Array.isArray(EVIDENCE_DATA)
+        ) {
+            return null;
+        }
+
+
+        return EVIDENCE_DATA.find(
+            evidence =>
+                evidence.id === id
+        );
+    }
+
+
+    /* ============================================================
+       PHASE 1 EVIDENCE
+       ============================================================ */
+
+    function getPhase1Evidence() {
 
         const phase1Ids = [
             "pottery",
@@ -242,10 +332,143 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* ============================================================
-       PHASE 1 — RENDER BOARD
+       PHASE 2 EVIDENCE
        ============================================================ */
 
-    function renderPhase1Board() {
+    function getPhase2Evidence() {
+
+        const available = [];
+
+
+        const chamber =
+            getEvidenceById(
+                "underground_chamber"
+            );
+
+
+        const storage =
+            getEvidenceById(
+                "storage_vessels"
+            );
+
+
+        const ceremonial =
+            getEvidenceById(
+                "ceremonial_fragment"
+            );
+
+
+        /*
+         * Underground Chamber
+         *
+         * Always becomes available when Round 2 starts.
+         */
+
+        if (chamber) {
+
+            available.push(chamber);
+
+        }
+
+
+        /*
+         * Storage Vessels
+         *
+         * Requires Underground Chamber
+         * to have been investigated.
+         */
+
+        if (
+            storage &&
+            gameState.investigationsCompleted
+                .includes("underground_chamber")
+        ) {
+
+            available.push(storage);
+
+        }
+
+
+        /*
+         * Ceremonial Inscription
+         *
+         * Only becomes available when the team
+         * chooses "Investigate the Contradiction".
+         */
+
+        if (
+            ceremonial &&
+            gameState.ceremonialEvidenceUnlocked
+        ) {
+
+            available.push(ceremonial);
+
+        }
+
+
+        return available;
+    }
+
+
+    /* ============================================================
+       CURRENT AVAILABLE INVESTIGATIONS
+       ============================================================ */
+
+    function getAvailableInvestigations() {
+
+        if (gameState.currentRound === 1) {
+
+            return getPhase1Evidence();
+
+        }
+
+
+        if (gameState.currentRound === 2) {
+
+            return getPhase2Evidence();
+
+        }
+
+
+        /*
+         * Round 3 will be implemented later.
+         */
+
+        return [];
+    }
+
+
+    /* ============================================================
+       RENDER CURRENT BOARD
+       ============================================================ */
+
+    function renderCurrentBoard() {
+
+        if (gameState.currentRound === 1) {
+
+            renderPhase1Board();
+
+            return;
+        }
+
+
+        if (gameState.currentRound === 2) {
+
+            renderPhase2Board();
+
+            return;
+        }
+
+    }
+
+
+    /* ============================================================
+       RENDER INVESTIGATION CARDS
+       ============================================================ */
+
+    function renderInvestigationCards(
+        investigations
+    ) {
 
         if (!evidenceGrid) {
             return;
@@ -253,10 +476,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         evidenceGrid.innerHTML = "";
-
-
-        const investigations =
-            getPhase1Investigations();
 
 
         investigations.forEach(
@@ -281,7 +500,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                 if (alreadyInvestigated) {
-                    card.classList.add("completed");
+
+                    card.classList.add(
+                        "completed"
+                    );
+
                 }
 
 
@@ -289,7 +512,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     !affordable &&
                     !alreadyInvestigated
                 ) {
-                    card.classList.add("disabled");
+
+                    card.classList.add(
+                        "disabled"
+                    );
+
                 }
 
 
@@ -302,7 +529,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     buttonText =
                         "Investigated";
 
-                } else if (!affordable) {
+                }
+                else if (!affordable) {
 
                     buttonText =
                         "Insufficient IP";
@@ -338,9 +566,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     <button
                         class="primary-button investigate-button"
                         data-evidence-id="${evidence.id}"
-                        ${alreadyInvestigated || !affordable
+                        ${alreadyInvestigated ||
+                        !affordable
                         ? "disabled"
-                        : ""}
+                        : ""
+                    }
                     >
                         ${buttonText}
                     </button>
@@ -348,7 +578,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
 
 
-                evidenceGrid.appendChild(card);
+                evidenceGrid.appendChild(
+                    card
+                );
 
             }
         );
@@ -373,13 +605,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
             });
 
-
-        renderPhase1Status();
     }
 
 
     /* ============================================================
-       PHASE 1 — STATUS PANEL
+       PHASE 1 — BOARD
+       ============================================================ */
+
+    function renderPhase1Board() {
+
+        const investigations =
+            getPhase1Evidence();
+
+
+        renderInvestigationCards(
+            investigations
+        );
+
+
+        renderPhase1Status();
+
+    }
+
+
+    /* ============================================================
+       PHASE 1 — STATUS
        ============================================================ */
 
     function renderPhase1Status() {
@@ -393,6 +643,17 @@ document.addEventListener("DOMContentLoaded", () => {
             "block";
 
 
+        const completed =
+            gameState.investigationsCompleted
+                .filter(id =>
+                    getPhase1Evidence()
+                        .some(
+                            evidence =>
+                                evidence.id === id
+                        )
+                ).length;
+
+
         eventPanel.innerHTML = `
 
             <div class="event-panel-inner">
@@ -401,9 +662,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     PHASE 1 — INITIAL INVESTIGATION
                 </span>
 
+
                 <h3>
                     Build your first understanding of Site 404.
                 </h3>
+
 
                 <p>
                     Your team has
@@ -414,10 +677,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     remaining.
                 </p>
 
+
+                <p>
+                    Initial investigations completed:
+                    <strong>
+                        ${completed} / ${ROUND_1_INVESTIGATION_LIMIT}
+                    </strong>
+                </p>
+
+
                 <p>
                     Discuss the available evidence
                     and decide what is worth investigating.
                 </p>
+
 
                 <p>
                     Each investigation costs IP.
@@ -431,34 +704,111 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* ============================================================
-       FIND EVIDENCE
+       PHASE 2 — BOARD
        ============================================================ */
 
-    function getEvidenceById(id) {
+    function renderPhase2Board() {
 
-        if (
-            typeof EVIDENCE_DATA === "undefined" ||
-            !Array.isArray(EVIDENCE_DATA)
-        ) {
-            return null;
-        }
+        const investigations =
+            getPhase2Evidence();
 
 
-        return EVIDENCE_DATA.find(
-            evidence =>
-                evidence.id === id
+        renderInvestigationCards(
+            investigations
         );
+
+
+        renderPhase2Status();
+
     }
 
 
     /* ============================================================
-       INVESTIGATE
+       PHASE 2 — STATUS
        ============================================================ */
 
-    function investigateEvidence(evidenceId) {
+    function renderPhase2Status() {
+
+        if (!eventPanel) {
+            return;
+        }
+
+
+        eventPanel.style.display =
+            "block";
+
+
+        const chamberFound =
+            gameState.investigationsCompleted
+                .includes(
+                    "underground_chamber"
+                );
+
+
+        eventPanel.innerHTML = `
+
+            <div class="event-panel-inner">
+
+                <span class="event-label">
+                    PHASE 2 — NEW EVIDENCE
+                </span>
+
+
+                <h3>
+                    The site has changed your investigation.
+                </h3>
+
+
+                <p>
+                    A hidden chamber has been detected
+                    beneath the central structure.
+                </p>
+
+
+                <p>
+                    Your team has
+                    <strong>
+                        ${gameState.investigationPoints}
+                        Investigation Points
+                    </strong>
+                    remaining.
+                </p>
+
+
+                ${chamberFound
+                ? `
+                            <p>
+                                The chamber has been opened.
+                                New evidence can now be examined.
+                            </p>
+                          `
+                : `
+                            <p>
+                                The chamber requires
+                                <strong>5 IP</strong>
+                                to investigate.
+                            </p>
+                          `
+            }
+
+            </div>
+
+        `;
+    }
+
+
+    /* ============================================================
+       INVESTIGATE EVIDENCE
+       ============================================================ */
+
+    function investigateEvidence(
+        evidenceId
+    ) {
 
         const evidence =
-            getEvidenceById(evidenceId);
+            getEvidenceById(
+                evidenceId
+            );
 
 
         if (!evidence) {
@@ -473,15 +823,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         /*
-         * Prevent investigating the same
-         * evidence twice.
+         * Prevent duplicate investigation.
          */
 
         if (
             gameState.investigationsCompleted
                 .includes(evidenceId)
         ) {
+
             return;
+        }
+
+
+        /*
+         * Phase 2 evidence requirements.
+         */
+
+        if (
+            gameState.currentRound === 2 &&
+            Array.isArray(evidence.requires)
+        ) {
+
+            const requirementsMet =
+                evidence.requires.every(
+                    requirement =>
+                        gameState
+                            .investigationsCompleted
+                            .includes(
+                                requirement
+                            )
+                );
+
+
+            if (!requirementsMet) {
+
+                alert(
+                    "This evidence cannot be investigated yet."
+                );
+
+                return;
+            }
+
         }
 
 
@@ -490,7 +872,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         /*
-         * Check available IP.
+         * Check Investigation Points.
          */
 
         if (
@@ -507,17 +889,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         /* --------------------------------------------------------
-           DEDUCT INVESTIGATION POINTS
+           SPEND IP
            -------------------------------------------------------- */
 
         gameState.investigationPoints -=
             cost;
 
-
-        /*
-         * Store exactly how much this
-         * investigation cost.
-         */
 
         gameState.lastInvestigationCost =
             cost;
@@ -528,17 +905,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         /* --------------------------------------------------------
-           MARK INVESTIGATION AS COMPLETE
+           RECORD INVESTIGATION
            -------------------------------------------------------- */
 
         gameState.investigationsCompleted.push(
             evidenceId
         );
 
-
-        /*
-         * Store the discovered evidence.
-         */
 
         gameState.discoveries.push(
             evidenceId
@@ -549,19 +922,17 @@ document.addEventListener("DOMContentLoaded", () => {
             evidenceId;
 
 
-        /*
-         * Update the expedition header
-         * before moving away from it.
-         */
-
         updateHeader();
 
 
         /*
-         * Show the result.
+         * Show the discovery first.
          */
 
-        showDiscovery(evidence);
+        showDiscovery(
+            evidence
+        );
+
     }
 
 
@@ -569,7 +940,9 @@ document.addEventListener("DOMContentLoaded", () => {
        DISCOVERY SCREEN
        ============================================================ */
 
-    function showDiscovery(evidence) {
+    function showDiscovery(
+        evidence
+    ) {
 
         if (discoveryTitle) {
 
@@ -595,7 +968,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             /*
-             * Evidence details
+             * Evidence details.
              */
 
             if (
@@ -608,7 +981,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     detail => {
 
                         const listItem =
-                            document.createElement("li");
+                            document.createElement(
+                                "li"
+                            );
 
                         listItem.textContent =
                             detail;
@@ -624,30 +999,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             /*
-             * ------------------------------------------------
-             * INVESTIGATION POINT FEEDBACK
-             * ------------------------------------------------
-             *
-             * This was missing before.
+             * Investigation Point feedback.
              */
 
             const pointsBox =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             pointsBox.className =
                 "discovery-points";
 
+
             pointsBox.style.marginTop =
                 "28px";
+
 
             pointsBox.style.padding =
                 "16px 20px";
 
+
             pointsBox.style.border =
                 "1px solid #C8B99D";
 
+
             pointsBox.style.background =
                 "#F3EBDD";
+
 
             pointsBox.innerHTML = `
 
@@ -675,38 +1054,439 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        showScreen(discoveryScreen);
+        showScreen(
+            discoveryScreen
+        );
+
     }
 
 
     /* ============================================================
-       CONTINUE AFTER DISCOVERY
+       CONTINUE FROM DISCOVERY
        ============================================================ */
 
     function continueFromDiscovery() {
 
-        /*
-         * Clear the current discovery.
-         */
+        const discoveredId =
+            gameState.currentDiscovery;
+
 
         gameState.currentDiscovery =
             null;
 
 
         /*
-         * Refresh everything.
+         * PHASE 1 → PHASE 2
+         *
+         * Round 1 ends after three initial
+         * investigation decisions.
+         */
+
+        if (
+            gameState.currentRound === 1 &&
+            countPhase1Investigations() >=
+            ROUND_1_INVESTIGATION_LIMIT
+        ) {
+
+            startPhase2();
+
+            return;
+        }
+
+
+        /*
+         * If the Underground Chamber was just
+         * investigated, it triggers the Phase 2
+         * interpretation event.
+         */
+
+        if (
+            gameState.currentRound === 2 &&
+            discoveredId ===
+            "underground_chamber" &&
+            !gameState.phase2EventTriggered
+        ) {
+
+            gameState.phase2EventTriggered =
+                true;
+
+
+            updateHeader();
+
+
+            showInterpretationEvent();
+
+            return;
+        }
+
+
+        /*
+         * Otherwise remain on the current
+         * investigation board.
          */
 
         updateHeader();
 
-        renderPhase1Board();
+        renderCurrentBoard();
+
+        showScreen(
+            expeditionScreen
+        );
+
+    }
+
+
+    /* ============================================================
+       COUNT PHASE 1 INVESTIGATIONS
+       ============================================================ */
+
+    function countPhase1Investigations() {
+
+        const phase1Ids =
+            getPhase1Evidence()
+                .map(
+                    evidence =>
+                        evidence.id
+                );
+
+
+        return gameState
+            .investigationsCompleted
+            .filter(
+                id =>
+                    phase1Ids.includes(id)
+            )
+            .length;
+
+    }
+
+
+    /* ============================================================
+       START PHASE 2
+       ============================================================ */
+
+    function startPhase2() {
+
+        gameState.currentRound =
+            2;
+
+        gameState.phase =
+            2;
+
+        gameState.phase2Started =
+            true;
+
+
+        updateHeader();
 
 
         /*
-         * Return to Phase 1 board.
+         * Give the team a clear transition
+         * into the new round.
          */
 
-        showScreen(expeditionScreen);
+        showRoundTransition();
+
+    }
+
+
+    /* ============================================================
+       ROUND 2 TRANSITION
+       ============================================================ */
+
+    function showRoundTransition() {
+
+        if (discoveryTitle) {
+
+            discoveryTitle.textContent =
+                "A New Discovery Has Emerged";
+
+        }
+
+
+        if (discoveryDescription) {
+
+            discoveryDescription.textContent =
+                "Your first investigation cycle is complete. New evidence has changed what can be investigated at Site 404.";
+
+        }
+
+
+        if (discoveryDetails) {
+
+            discoveryDetails.innerHTML = `
+
+                <li>
+                    Round 1 complete
+                </li>
+
+                <li>
+                    Investigation Points remaining:
+                    <strong>
+                        ${gameState.investigationPoints}
+                    </strong>
+                </li>
+
+                <li>
+                    A hidden chamber has been detected
+                    beneath the central structure.
+                </li>
+
+                <li>
+                    New investigation available:
+                    <strong>
+                        Underground Chamber — 5 IP
+                    </strong>
+                </li>
+
+            `;
+
+        }
+
+
+        if (continueDiscovery) {
+
+            continueDiscovery.textContent =
+                "ENTER ROUND 2";
+
+        }
+
+
+        showScreen(
+            discoveryScreen
+        );
+
+    }
+
+
+    /* ============================================================
+       PHASE 2 — INTERPRETATION EVENT
+       ============================================================ */
+
+    function showInterpretationEvent() {
+
+        const event =
+            getEventById(
+                "chamber-discovery"
+            );
+
+
+        if (!event) {
+
+            console.error(
+                "Phase 2 event not found."
+            );
+
+            renderCurrentBoard();
+
+            showScreen(
+                expeditionScreen
+            );
+
+            return;
+        }
+
+
+        gameState.currentEvent =
+            event;
+
+
+        if (eventTitle) {
+
+            eventTitle.textContent =
+                event.title;
+
+        }
+
+
+        if (eventDescription) {
+
+            eventDescription.textContent =
+                event.description;
+
+        }
+
+
+        if (eventOptions) {
+
+            eventOptions.innerHTML = "";
+
+
+            event.options.forEach(
+                option => {
+
+                    const optionCard =
+                        document.createElement(
+                            "article"
+                        );
+
+
+                    optionCard.className =
+                        "event-option";
+
+
+                    optionCard.innerHTML = `
+
+                        <h3>
+                            ${option.title}
+                        </h3>
+
+                        <p>
+                            ${option.description}
+                        </p>
+
+                        <button
+                            class="primary-button event-choice-button"
+                            data-event-option="${option.id}"
+                        >
+                            Choose
+                        </button>
+
+                    `;
+
+
+                    eventOptions.appendChild(
+                        optionCard
+                    );
+
+                }
+            );
+
+
+            eventOptions
+                .querySelectorAll(
+                    ".event-choice-button"
+                )
+                .forEach(
+                    button => {
+
+                        button.addEventListener(
+                            "click",
+                            () => {
+
+                                chooseEventOption(
+                                    button.dataset
+                                        .eventOption
+                                );
+
+                            }
+                        );
+
+                    }
+                );
+
+        }
+
+
+        showScreen(
+            eventScreen
+        );
+
+    }
+
+
+    /* ============================================================
+       EVENT LOOKUP
+       ============================================================ */
+
+    function getEventById(id) {
+
+        if (
+            typeof EVENT_DATA === "undefined" ||
+            !Array.isArray(EVENT_DATA)
+        ) {
+            return null;
+        }
+
+
+        return EVENT_DATA.find(
+            event =>
+                event.id === id
+        );
+
+    }
+
+
+    /* ============================================================
+       EVENT CHOICE
+       ============================================================ */
+
+    function chooseEventOption(
+        optionId
+    ) {
+
+        const event =
+            gameState.currentEvent;
+
+
+        if (!event) {
+            return;
+        }
+
+
+        const option =
+            event.options.find(
+                item =>
+                    item.id === optionId
+            );
+
+
+        if (!option) {
+            return;
+        }
+
+
+        /*
+         * Add any evidence unlocked
+         * by the selected decision.
+         */
+
+        if (
+            Array.isArray(
+                option.addEvidence
+            )
+        ) {
+
+            option.addEvidence.forEach(
+                evidenceId => {
+
+                    if (
+                        evidenceId ===
+                        "ceremonial_fragment"
+                    ) {
+
+                        gameState
+                            .ceremonialEvidenceUnlocked =
+                            true;
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /*
+         * Clear active event.
+         */
+
+        gameState.currentEvent =
+            null;
+
+
+        /*
+         * Return to the Phase 2 board.
+         */
+
+        updateHeader();
+
+        renderPhase2Board();
+
+        showScreen(
+            expeditionScreen
+        );
+
     }
 
 
@@ -758,6 +1538,16 @@ document.addEventListener("DOMContentLoaded", () => {
        INITIAL STATE
        ============================================================ */
 
-    showScreen(missionScreen);
+    if (continueDiscovery) {
+
+        continueDiscovery.textContent =
+            "RECORD DISCOVERY";
+
+    }
+
+
+    showScreen(
+        missionScreen
+    );
 
 });
