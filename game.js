@@ -1,10 +1,15 @@
 /* ============================================================
    DIG SITE 404
-   PHASE 0 + PHASE 1 + PHASE 2
+
+   PHASE 0 + PHASE 1 + PHASE 2 + PHASE 3
+   RESULTS + LEARNING
+
    THE BURIED CROSSROADS
+
    ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
+
     "use strict";
 
 
@@ -24,20 +29,50 @@ document.addEventListener("DOMContentLoaded", () => {
     const eventScreen =
         document.getElementById("screen-event");
 
+    const reconstructionScreen =
+        document.getElementById("screen-reconstruction");
+
+    const resultsScreen =
+        document.getElementById("screen-results");
+
+    const learningScreen =
+        document.getElementById("screen-learning");
+
+
+    /* ---------------- Mission ---------------- */
+
     const teamNameInput =
         document.getElementById("team-name");
 
     const startButton =
         document.getElementById("start-game");
 
+
+    /* ---------------- Discovery ---------------- */
+
     const continueDiscovery =
         document.getElementById("continue-discovery");
+
+    const discoveryTitle =
+        document.getElementById("discovery-title");
+
+    const discoveryDescription =
+        document.getElementById("discovery-description");
+
+    const discoveryDetails =
+        document.getElementById("discovery-details");
+
+
+    /* ---------------- Expedition ---------------- */
 
     const evidenceGrid =
         document.getElementById("evidence-grid");
 
     const eventPanel =
         document.getElementById("event-panel");
+
+
+    /* ---------------- Header ---------------- */
 
     const headerTeam =
         document.getElementById("header-team");
@@ -48,14 +83,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const headerPoints =
         document.getElementById("header-points");
 
-    const discoveryTitle =
-        document.getElementById("discovery-title");
 
-    const discoveryDescription =
-        document.getElementById("discovery-description");
-
-    const discoveryDetails =
-        document.getElementById("discovery-details");
+    /* ---------------- Event ---------------- */
 
     const eventTitle =
         document.getElementById("event-title");
@@ -67,6 +96,54 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("event-options");
 
 
+    /* ---------------- Reconstruction ---------------- */
+
+    const siteOptions =
+        document.getElementById("site-options");
+
+    const finalEvidence =
+        document.getElementById("final-evidence");
+
+    const submitReconstruction =
+        document.getElementById("submit-reconstruction");
+
+    const reconstructionError =
+        document.getElementById("reconstruction-error");
+
+
+    /* ---------------- Results ---------------- */
+
+    const resultsTeam =
+        document.getElementById("results-team");
+
+    const resultSite =
+        document.getElementById("result-site");
+
+    const scoreEvidence =
+        document.getElementById("score-evidence");
+
+    const scoreResources =
+        document.getElementById("score-resources");
+
+    const scoreAdaptability =
+        document.getElementById("score-adaptability");
+
+    const scoreTotal =
+        document.getElementById("score-total");
+
+    const viewLearning =
+        document.getElementById("view-learning");
+
+
+    /* ---------------- Learning ---------------- */
+
+    const conceptMap =
+        document.getElementById("concept-map");
+
+    const learningTitle =
+        document.getElementById("learning-title");
+
+
     /* ============================================================
        GAME CONSTANTS
        ============================================================ */
@@ -76,11 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const TOTAL_ROUNDS = 3;
 
     /*
-     * Round 1 consists of three investigation decisions.
-     *
-     * This is deliberately three rather than "investigate
-     * everything", because the team must still have enough
-     * Investigation Points to investigate the Round 2 chamber.
+     * Round 1 consists of exactly three investigation decisions.
      */
 
     const ROUND_1_INVESTIGATION_LIMIT = 3;
@@ -126,6 +199,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
         currentEvent: null,
 
+        eventChoice: null,
+
+
+        /* ---------------- Phase 3 ---------------- */
+
+        phase3Started: false,
+
+        finalReconstruction: null,
+
+        finalEvidence: [],
+
+        phase3Complete: false,
+
+        gameComplete: false,
+
+
+        /* ---------------- Scores ---------------- */
+
+        scores: {
+
+            evidence: 0,
+
+            resources: 0,
+
+            adaptability: 0,
+
+            total: 0
+
+        },
+
 
         /* ---------------- UI feedback ---------------- */
 
@@ -144,30 +247,44 @@ document.addEventListener("DOMContentLoaded", () => {
     function showScreen(screen) {
 
         const screens = [
+
             missionScreen,
             expeditionScreen,
             discoveryScreen,
-            eventScreen
+            eventScreen,
+            reconstructionScreen,
+            resultsScreen,
+            learningScreen
+
         ];
+
 
         screens.forEach(element => {
 
-            if (element) {
-                element.classList.remove("active");
+            if (!element) {
+                return;
             }
+
+            element.classList.remove("active");
 
         });
 
 
         if (screen) {
+
             screen.classList.add("active");
+
         }
 
 
         window.scrollTo({
+
             top: 0,
+
             behavior: "smooth"
+
         });
+
     }
 
 
@@ -218,7 +335,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!enteredName) {
 
             if (teamNameInput) {
+
                 teamNameInput.focus();
+
             }
 
             alert(
@@ -226,6 +345,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             return;
+
         }
 
 
@@ -244,6 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
         gameState.phase =
             1;
 
+
         gameState.investigationsCompleted =
             [];
 
@@ -252,6 +373,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         gameState.currentDiscovery =
             null;
+
 
         gameState.phase2Started =
             false;
@@ -265,6 +387,39 @@ document.addEventListener("DOMContentLoaded", () => {
         gameState.currentEvent =
             null;
 
+        gameState.eventChoice =
+            null;
+
+
+        gameState.phase3Started =
+            false;
+
+        gameState.finalReconstruction =
+            null;
+
+        gameState.finalEvidence =
+            [];
+
+        gameState.phase3Complete =
+            false;
+
+        gameState.gameComplete =
+            false;
+
+
+        gameState.scores = {
+
+            evidence: 0,
+
+            resources: 0,
+
+            adaptability: 0,
+
+            total: 0
+
+        };
+
+
         gameState.lastInvestigationCost =
             0;
 
@@ -277,6 +432,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderCurrentBoard();
 
         showScreen(expeditionScreen);
+
     }
 
 
@@ -290,14 +446,45 @@ document.addEventListener("DOMContentLoaded", () => {
             typeof EVIDENCE_DATA === "undefined" ||
             !Array.isArray(EVIDENCE_DATA)
         ) {
+
             return null;
+
         }
 
 
         return EVIDENCE_DATA.find(
+
             evidence =>
                 evidence.id === id
+
         );
+
+    }
+
+
+    /* ============================================================
+       EVENT LOOKUP
+       ============================================================ */
+
+    function getEventById(id) {
+
+        if (
+            typeof EVENT_DATA === "undefined" ||
+            !Array.isArray(EVENT_DATA)
+        ) {
+
+            return null;
+
+        }
+
+
+        return EVENT_DATA.find(
+
+            event =>
+                event.id === id
+
+        );
+
     }
 
 
@@ -308,11 +495,17 @@ document.addEventListener("DOMContentLoaded", () => {
     function getPhase1Evidence() {
 
         const phase1Ids = [
+
             "pottery",
+
             "coin",
+
             "inscription",
+
             "central_structure",
+
             "trade_seal"
+
         ];
 
 
@@ -320,14 +513,19 @@ document.addEventListener("DOMContentLoaded", () => {
             typeof EVIDENCE_DATA === "undefined" ||
             !Array.isArray(EVIDENCE_DATA)
         ) {
+
             return [];
+
         }
 
 
         return EVIDENCE_DATA.filter(
+
             evidence =>
                 phase1Ids.includes(evidence.id)
+
         );
+
     }
 
 
@@ -352,19 +550,18 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
 
-        const ceremonial =
-            getEvidenceById(
-                "ceremonial_fragment"
-            );
-
-
         /*
          * Underground Chamber
          *
          * Always becomes available when Round 2 starts.
          */
 
-        if (chamber) {
+        if (
+            chamber &&
+            !gameState.investigationsCompleted.includes(
+                "underground_chamber"
+            )
+        ) {
 
             available.push(chamber);
 
@@ -374,14 +571,19 @@ document.addEventListener("DOMContentLoaded", () => {
         /*
          * Storage Vessels
          *
-         * Requires Underground Chamber
-         * to have been investigated.
+         * Requires Underground Chamber.
          */
 
         if (
+
             storage &&
+
             gameState.investigationsCompleted
-                .includes("underground_chamber")
+                .includes("underground_chamber") &&
+
+            !gameState.investigationsCompleted
+                .includes("storage_vessels")
+
         ) {
 
             available.push(storage);
@@ -389,16 +591,41 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
+        return available;
+
+    }
+
+
+    /* ============================================================
+       PHASE 3 EVIDENCE
+       ============================================================ */
+
+    function getPhase3Evidence() {
+
+        const available = [];
+
+
+        const ceremonial =
+            getEvidenceById(
+                "ceremonial_fragment"
+            );
+
+
         /*
-         * Ceremonial Inscription
-         *
-         * Only becomes available when the team
-         * chooses "Investigate the Contradiction".
+         * Ceremonial Fragment is available ONLY when
+         * the team selected "Investigate the Contradiction".
          */
 
         if (
+
             ceremonial &&
-            gameState.ceremonialEvidenceUnlocked
+
+            gameState.ceremonialEvidenceUnlocked &&
+
+            !gameState.investigationsCompleted.includes(
+                "ceremonial_fragment"
+            )
+
         ) {
 
             available.push(ceremonial);
@@ -407,6 +634,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         return available;
+
     }
 
 
@@ -430,11 +658,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        /*
-         * Round 3 will be implemented later.
-         */
+        if (gameState.currentRound === 3) {
+
+            return getPhase3Evidence();
+
+        }
+
 
         return [];
+
     }
 
 
@@ -449,6 +681,7 @@ document.addEventListener("DOMContentLoaded", () => {
             renderPhase1Board();
 
             return;
+
         }
 
 
@@ -457,6 +690,16 @@ document.addEventListener("DOMContentLoaded", () => {
             renderPhase2Board();
 
             return;
+
+        }
+
+
+        if (gameState.currentRound === 3) {
+
+            renderPhase3Board();
+
+            return;
+
         }
 
     }
@@ -471,7 +714,9 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
 
         if (!evidenceGrid) {
+
             return;
+
         }
 
 
@@ -530,6 +775,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         "Investigated";
 
                 }
+
                 else if (!affordable) {
 
                     buttonText =
@@ -543,36 +789,50 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="evidence-card-top">
 
                         <span class="evidence-number">
+
                             ${evidence.number || ""}
+
                         </span>
 
                         <span class="evidence-cost">
+
                             ${evidence.cost} IP
+
                         </span>
 
                     </div>
 
 
                     <h3>
+
                         ${evidence.title}
+
                     </h3>
 
 
                     <p>
-                        ${evidence.description}
+
+                        ${evidence.description || ""}
+
                     </p>
 
 
                     <button
+
                         class="primary-button investigate-button"
+
                         data-evidence-id="${evidence.id}"
+
                         ${alreadyInvestigated ||
                         !affordable
                         ? "disabled"
                         : ""
                     }
+
                     >
+
                         ${buttonText}
+
                     </button>
 
                 `;
@@ -593,7 +853,9 @@ document.addEventListener("DOMContentLoaded", () => {
             .forEach(button => {
 
                 button.addEventListener(
+
                     "click",
+
                     () => {
 
                         investigateEvidence(
@@ -601,6 +863,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         );
 
                     }
+
                 );
 
             });
@@ -615,7 +878,12 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderPhase1Board() {
 
         const investigations =
-            getPhase1Evidence();
+            getPhase1Evidence()
+                .filter(
+                    evidence =>
+                        !gameState.investigationsCompleted
+                            .includes(evidence.id)
+                );
 
 
         renderInvestigationCards(
@@ -635,7 +903,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderPhase1Status() {
 
         if (!eventPanel) {
+
             return;
+
         }
 
 
@@ -644,14 +914,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         const completed =
-            gameState.investigationsCompleted
-                .filter(id =>
-                    getPhase1Evidence()
-                        .some(
-                            evidence =>
-                                evidence.id === id
-                        )
-                ).length;
+            countPhase1Investigations();
 
 
         eventPanel.innerHTML = `
@@ -659,47 +922,71 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="event-panel-inner">
 
                 <span class="event-label">
+
                     PHASE 1 — INITIAL INVESTIGATION
+
                 </span>
 
 
                 <h3>
+
                     Build your first understanding of Site 404.
+
                 </h3>
 
 
                 <p>
+
                     Your team has
+
                     <strong>
+
                         ${gameState.investigationPoints}
+
                         Investigation Points
+
                     </strong>
+
                     remaining.
+
                 </p>
 
 
                 <p>
+
                     Initial investigations completed:
+
                     <strong>
-                        ${completed} / ${ROUND_1_INVESTIGATION_LIMIT}
+
+                        ${completed} /
+                        ${ROUND_1_INVESTIGATION_LIMIT}
+
                     </strong>
+
                 </p>
 
 
                 <p>
+
                     Discuss the available evidence
+
                     and decide what is worth investigating.
+
                 </p>
 
 
                 <p>
+
                     Each investigation costs IP.
+
                     Choose carefully.
+
                 </p>
 
             </div>
 
         `;
+
     }
 
 
@@ -730,7 +1017,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderPhase2Status() {
 
         if (!eventPanel) {
+
             return;
+
         }
 
 
@@ -750,50 +1039,78 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="event-panel-inner">
 
                 <span class="event-label">
+
                     PHASE 2 — NEW EVIDENCE
+
                 </span>
 
 
                 <h3>
+
                     The site has changed your investigation.
+
                 </h3>
 
 
                 <p>
+
                     A hidden chamber has been detected
+
                     beneath the central structure.
+
                 </p>
 
 
                 <p>
+
                     Your team has
+
                     <strong>
+
                         ${gameState.investigationPoints}
+
                         Investigation Points
+
                     </strong>
+
                     remaining.
+
                 </p>
 
 
                 ${chamberFound
+
                 ? `
-                            <p>
-                                The chamber has been opened.
-                                New evidence can now be examined.
-                            </p>
-                          `
+
+                        <p>
+
+                            The chamber has been opened.
+
+                            New evidence can now be examined.
+
+                        </p>
+
+                    `
+
                 : `
-                            <p>
-                                The chamber requires
-                                <strong>5 IP</strong>
-                                to investigate.
-                            </p>
-                          `
+
+                        <p>
+
+                            The chamber requires
+
+                            <strong>5 IP</strong>
+
+                            to investigate.
+
+                        </p>
+
+                    `
             }
 
             </div>
 
         `;
+
     }
 
 
@@ -819,6 +1136,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             return;
+
         }
 
 
@@ -832,6 +1150,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
 
             return;
+
         }
 
 
@@ -846,12 +1165,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const requirementsMet =
                 evidence.requires.every(
+
                     requirement =>
                         gameState
                             .investigationsCompleted
                             .includes(
                                 requirement
                             )
+
                 );
 
 
@@ -862,7 +1183,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
 
                 return;
+
             }
+
+        }
+
+
+        /*
+         * Phase 3 evidence is only valid on the
+         * contradiction route.
+         */
+
+        if (
+            gameState.currentRound === 3 &&
+            evidenceId === "ceremonial_fragment" &&
+            !gameState.ceremonialEvidenceUnlocked
+        ) {
+
+            return;
 
         }
 
@@ -885,6 +1223,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             return;
+
         }
 
 
@@ -944,6 +1283,13 @@ document.addEventListener("DOMContentLoaded", () => {
         evidence
     ) {
 
+        if (!evidence) {
+
+            return;
+
+        }
+
+
         if (discoveryTitle) {
 
             discoveryTitle.textContent =
@@ -957,7 +1303,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             discoveryDescription.textContent =
                 evidence.discoveryDescription ||
-                evidence.description;
+                evidence.description ||
+                "";
 
         }
 
@@ -985,8 +1332,10 @@ document.addEventListener("DOMContentLoaded", () => {
                                 "li"
                             );
 
+
                         listItem.textContent =
                             detail;
+
 
                         discoveryDetails.appendChild(
                             listItem
@@ -1015,14 +1364,11 @@ document.addEventListener("DOMContentLoaded", () => {
             pointsBox.style.marginTop =
                 "28px";
 
-
             pointsBox.style.padding =
                 "16px 20px";
 
-
             pointsBox.style.border =
                 "1px solid #C8B99D";
-
 
             pointsBox.style.background =
                 "#F3EBDD";
@@ -1031,7 +1377,9 @@ document.addEventListener("DOMContentLoaded", () => {
             pointsBox.innerHTML = `
 
                 <strong>
+
                     Investigation Cost:
+
                 </strong>
 
                 ${gameState.lastInvestigationCost} IP
@@ -1039,7 +1387,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <br>
 
                 <strong>
+
                     Investigation Points Remaining:
+
                 </strong>
 
                 ${gameState.investigationPoints} IP
@@ -1050,6 +1400,14 @@ document.addEventListener("DOMContentLoaded", () => {
             discoveryDetails.appendChild(
                 pointsBox
             );
+
+        }
+
+
+        if (continueDiscovery) {
+
+            continueDiscovery.textContent =
+                "RECORD DISCOVERY";
 
         }
 
@@ -1076,35 +1434,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         /*
+         * --------------------------------------------------------
          * PHASE 1 → PHASE 2
          *
          * Round 1 ends after three initial
          * investigation decisions.
+         * --------------------------------------------------------
          */
 
         if (
+
             gameState.currentRound === 1 &&
+
             countPhase1Investigations() >=
             ROUND_1_INVESTIGATION_LIMIT
+
         ) {
 
             startPhase2();
 
             return;
+
         }
 
 
         /*
-         * If the Underground Chamber was just
-         * investigated, it triggers the Phase 2
+         * --------------------------------------------------------
+         * PHASE 2
+         *
+         * Underground Chamber triggers the
          * interpretation event.
+         * --------------------------------------------------------
          */
 
         if (
+
             gameState.currentRound === 2 &&
+
             discoveredId ===
             "underground_chamber" &&
+
             !gameState.phase2EventTriggered
+
         ) {
 
             gameState.phase2EventTriggered =
@@ -1113,16 +1484,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
             updateHeader();
 
-
             showInterpretationEvent();
 
             return;
+
         }
 
 
         /*
-         * Otherwise remain on the current
-         * investigation board.
+         * --------------------------------------------------------
+         * PHASE 3
+         *
+         * Ceremonial Fragment discovery leads
+         * directly to final reconstruction.
+         * --------------------------------------------------------
+         */
+
+        if (
+
+            gameState.currentRound === 3 &&
+
+            discoveredId ===
+            "ceremonial_fragment"
+
+        ) {
+
+            openReconstruction();
+
+            return;
+
+        }
+
+
+        /*
+         * Fallback:
+         * remain on the current investigation board.
          */
 
         updateHeader();
@@ -1217,26 +1613,41 @@ document.addEventListener("DOMContentLoaded", () => {
             discoveryDetails.innerHTML = `
 
                 <li>
+
                     Round 1 complete
+
                 </li>
 
                 <li>
+
                     Investigation Points remaining:
+
                     <strong>
+
                         ${gameState.investigationPoints}
+
                     </strong>
+
                 </li>
 
                 <li>
+
                     A hidden chamber has been detected
+
                     beneath the central structure.
+
                 </li>
 
                 <li>
+
                     New investigation available:
+
                     <strong>
+
                         Underground Chamber — 5 IP
+
                     </strong>
+
                 </li>
 
             `;
@@ -1277,6 +1688,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Phase 2 event not found."
             );
 
+
             renderCurrentBoard();
 
             showScreen(
@@ -1284,6 +1696,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             return;
+
         }
 
 
@@ -1328,18 +1741,27 @@ document.addEventListener("DOMContentLoaded", () => {
                     optionCard.innerHTML = `
 
                         <h3>
+
                             ${option.title}
+
                         </h3>
 
                         <p>
+
                             ${option.description}
+
                         </p>
 
                         <button
+
                             class="primary-button event-choice-button"
+
                             data-event-option="${option.id}"
+
                         >
+
                             Choose
+
                         </button>
 
                     `;
@@ -1361,7 +1783,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     button => {
 
                         button.addEventListener(
+
                             "click",
+
                             () => {
 
                                 chooseEventOption(
@@ -1370,6 +1794,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 );
 
                             }
+
                         );
 
                     }
@@ -1380,28 +1805,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         showScreen(
             eventScreen
-        );
-
-    }
-
-
-    /* ============================================================
-       EVENT LOOKUP
-       ============================================================ */
-
-    function getEventById(id) {
-
-        if (
-            typeof EVENT_DATA === "undefined" ||
-            !Array.isArray(EVENT_DATA)
-        ) {
-            return null;
-        }
-
-
-        return EVENT_DATA.find(
-            event =>
-                event.id === id
         );
 
     }
@@ -1420,25 +1823,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         if (!event) {
+
             return;
+
         }
 
 
         const option =
             event.options.find(
+
                 item =>
                     item.id === optionId
+
             );
 
 
         if (!option) {
+
             return;
+
         }
 
 
         /*
-         * Add any evidence unlocked
-         * by the selected decision.
+         * Record the team's Phase 2 decision.
+         */
+
+        gameState.eventChoice =
+            option.id;
+
+
+        /*
+         * Existing Phase 2 logic:
+         *
+         * Some choices unlock additional evidence.
          */
 
         if (
@@ -1451,8 +1869,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 evidenceId => {
 
                     if (
+
                         evidenceId ===
                         "ceremonial_fragment"
+
                     ) {
 
                         gameState
@@ -1466,7 +1886,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
 
-
+        gameState.eventChoice = optionId;
         /*
          * Clear active event.
          */
@@ -1476,16 +1896,1073 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         /*
-         * Return to the Phase 2 board.
+         * ========================================================
+         * PHASE 2 → PHASE 3
+         *
+         * ALL THREE OPTIONS now converge into Phase 3.
+         *
+         * Only the contradiction route gets the extra
+         * ceremonial investigation.
+         * ========================================================
          */
+
+        startPhase3();
+
+    }
+
+
+    /* ============================================================
+       PHASE 3 — START
+       ============================================================ */
+
+    function startPhase3() {
+
+        gameState.currentRound =
+            3;
+
+        gameState.phase =
+            3;
+
+        gameState.phase3Started =
+            true;
+
 
         updateHeader();
 
-        renderPhase2Board();
+
+        /*
+         * ONLY the "Investigate Contradiction" route
+         * receives the additional investigation.
+         */
+
+        if (
+
+            gameState.eventChoice ===
+            "investigate-ceremonial" &&
+
+            gameState.ceremonialEvidenceUnlocked &&
+
+            !gameState.investigationsCompleted
+                .includes(
+                    "ceremonial_fragment"
+                )
+
+        ) {
+
+            renderPhase3Board();
+
+            showScreen(
+                expeditionScreen
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * The other two choices go directly
+         * to Final Reconstruction.
+         */
+
+        openReconstruction();
+
+    }
+
+
+    /* ============================================================
+       PHASE 3 — BOARD
+       ============================================================ */
+
+    function renderPhase3Board() {
+
+        const investigations =
+            getPhase3Evidence();
+
+
+        renderInvestigationCards(
+            investigations
+        );
+
+
+        renderPhase3Status();
+
+    }
+
+
+    /* ============================================================
+       PHASE 3 — STATUS
+       ============================================================ */
+
+    function renderPhase3Status() {
+
+        if (!eventPanel) {
+
+            return;
+
+        }
+
+
+        eventPanel.style.display =
+            "block";
+
+
+        const ceremonial =
+            getEvidenceById(
+                "ceremonial_fragment"
+            );
+
+
+        const cost =
+            ceremonial
+                ? Number(ceremonial.cost)
+                : 0;
+
+
+        const canAfford =
+            gameState.investigationPoints >=
+            cost;
+
+
+        eventPanel.innerHTML = `
+
+            <div class="event-panel-inner">
+
+                <span class="event-label">
+
+                    PHASE 3 — FINAL INVESTIGATION
+
+                </span>
+
+
+                <h3>
+
+                    One final piece of evidence may change
+                    your reconstruction.
+
+                </h3>
+
+
+                <p>
+
+                    Your team has
+
+                    <strong>
+
+                        ${gameState.investigationPoints}
+
+                        Investigation Points
+
+                    </strong>
+
+                    remaining.
+
+                </p>
+
+
+                <p>
+
+                    This evidence became available because
+                    your team chose to investigate the contradiction.
+
+                </p>
+
+
+                <p>
+
+                    Decide whether this final evidence changes
+                    your understanding of Site 404.
+
+                </p>
+
+
+                ${!canAfford
+                ? `
+
+                            <p>
+
+                                You do not have enough IP
+                                to investigate this evidence.
+
+                                Your team must now proceed
+                                to the final reconstruction.
+
+                            </p>
+
+                            <button
+
+                                id="proceed-to-reconstruction"
+
+                                class="primary-button"
+
+                            >
+
+                                Proceed to Reconstruction
+
+                            </button>
+
+                        `
+                : ""
+            }
+
+            </div>
+
+        `;
+
+
+        const proceedButton =
+            document.getElementById(
+                "proceed-to-reconstruction"
+            );
+
+
+        if (proceedButton) {
+
+            proceedButton.addEventListener(
+
+                "click",
+
+                openReconstruction
+
+            );
+
+        }
+
+    }
+
+
+    /* ============================================================
+       PHASE 3 — FINAL RECONSTRUCTION
+       ============================================================ */
+
+    function openReconstruction() {
+
+        gameState.currentRound =
+            3;
+
+        gameState.phase =
+            3;
+
+        gameState.phase3Started =
+            true;
+
+
+        updateHeader();
+
+
+        renderReconstructionOptions();
+
+        renderFinalEvidence();
+
+
+        if (reconstructionError) {
+
+            reconstructionError.textContent =
+                "";
+
+            reconstructionError.classList.remove(
+                "visible"
+            );
+
+        }
+
+
+        if (submitReconstruction) {
+
+            submitReconstruction.disabled =
+                false;
+
+            submitReconstruction.textContent =
+                "Submit Reconstruction";
+
+        }
+
 
         showScreen(
-            expeditionScreen
+            reconstructionScreen
         );
+
+    }
+
+
+    /* ============================================================
+       RECONSTRUCTION OPTIONS
+       ============================================================ */
+
+    function renderReconstructionOptions() {
+
+        if (!siteOptions) {
+
+            return;
+
+        }
+
+
+        siteOptions.innerHTML = "";
+
+
+        if (
+            typeof RECONSTRUCTION_OPTIONS ===
+            "undefined" ||
+            !Array.isArray(
+                RECONSTRUCTION_OPTIONS
+            )
+        ) {
+
+            console.error(
+                "RECONSTRUCTION_OPTIONS not found."
+            );
+
+            return;
+
+        }
+
+
+        RECONSTRUCTION_OPTIONS.forEach(
+            option => {
+
+                const wrapper =
+                    document.createElement(
+                        "label"
+                    );
+
+
+                wrapper.className =
+                    "site-option";
+
+
+                wrapper.innerHTML = `
+
+                    <input
+
+                        type="radio"
+
+                        name="site-reconstruction"
+
+                        value="${option.id}"
+
+                    >
+
+
+                    <span class="site-option-content">
+
+                        <strong>
+
+                            ${option.title}
+
+                        </strong>
+
+
+                        <span>
+
+                            ${option.description || ""}
+
+                        </span>
+
+                    </span>
+
+                `;
+
+
+                siteOptions.appendChild(
+                    wrapper
+                );
+
+            }
+        );
+
+    }
+
+
+    /* ============================================================
+       FINAL EVIDENCE SELECTION
+       ============================================================ */
+
+    function renderFinalEvidence() {
+
+        if (!finalEvidence) {
+
+            return;
+
+        }
+
+
+        finalEvidence.innerHTML = "";
+
+
+        /*
+         * Only evidence actually discovered by the team
+         * can be selected.
+         */
+
+        gameState.discoveries.forEach(
+            evidenceId => {
+
+                const evidence =
+                    getEvidenceById(
+                        evidenceId
+                    );
+
+
+                if (!evidence) {
+
+                    return;
+
+                }
+
+
+                const wrapper =
+                    document.createElement(
+                        "label"
+                    );
+
+
+                wrapper.className =
+                    "final-evidence-option";
+
+
+                wrapper.innerHTML = `
+
+                    <input
+
+                        type="checkbox"
+
+                        name="final-evidence"
+
+                        value="${evidenceId}"
+
+                    >
+
+
+                    <span>
+
+                        ${evidence.title}
+
+                    </span>
+
+                `;
+
+
+                finalEvidence.appendChild(
+                    wrapper
+                );
+
+            }
+        );
+
+    }
+
+
+    /* ============================================================
+       SUBMIT FINAL RECONSTRUCTION
+       ============================================================ */
+
+    function submitFinalReconstruction() {
+
+        if (
+            gameState.phase3Complete
+        ) {
+
+            return;
+
+        }
+
+
+        /*
+         * Selected site interpretation.
+         */
+
+        const selectedSite =
+            document.querySelector(
+                'input[name="site-reconstruction"]:checked'
+            );
+
+
+        /*
+         * Selected evidence.
+         */
+
+        const selectedEvidence =
+            Array.from(
+
+                document.querySelectorAll(
+                    'input[name="final-evidence"]:checked'
+                )
+
+            ).map(
+
+                input =>
+                    input.value
+
+            );
+
+
+        /*
+         * Validate site.
+         */
+
+        if (!selectedSite) {
+
+            showReconstructionError(
+                "Choose your final reconstruction first."
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * Exactly three pieces of evidence.
+         */
+
+        if (
+            selectedEvidence.length !== 3
+        ) {
+
+            showReconstructionError(
+                "Select exactly 3 strongest pieces of evidence."
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * Save final decision.
+         */
+
+        gameState.finalReconstruction =
+            selectedSite.value;
+
+
+        gameState.finalEvidence =
+            selectedEvidence;
+
+
+        gameState.phase3Complete =
+            true;
+
+
+        calculateScores();
+
+
+        showResults();
+
+    }
+
+
+    /* ============================================================
+       RECONSTRUCTION ERROR
+       ============================================================ */
+
+    function showReconstructionError(
+        message
+    ) {
+
+        if (!reconstructionError) {
+
+            return;
+
+        }
+
+
+        reconstructionError.textContent =
+            message;
+
+
+        reconstructionError.classList.add(
+            "visible"
+        );
+
+    }
+
+
+    /* ============================================================
+       SCORING
+       ============================================================ */
+
+    function calculateScores() {
+
+        /*
+         * --------------------------------------------------------
+         * EVIDENCE SCORE
+         *
+         * Each selected piece that supports the chosen
+         * reconstruction contributes 10 points.
+         *
+         * Maximum = 30
+         * --------------------------------------------------------
+         */
+
+        let evidenceScore =
+            0;
+
+
+        let reconstruction =
+            null;
+
+
+        if (
+            typeof RECONSTRUCTION_OPTIONS !==
+            "undefined" &&
+            Array.isArray(
+                RECONSTRUCTION_OPTIONS
+            )
+        ) {
+
+            reconstruction =
+                RECONSTRUCTION_OPTIONS.find(
+
+                    option =>
+                        option.id ===
+                        gameState.finalReconstruction
+
+                );
+
+        }
+
+
+        if (reconstruction) {
+
+            const supportingEvidence =
+                reconstruction.supportingEvidence ||
+                [];
+
+
+            gameState.finalEvidence.forEach(
+                evidenceId => {
+
+                    if (
+                        supportingEvidence.includes(
+                            evidenceId
+                        )
+                    ) {
+
+                        evidenceScore +=
+                            10;
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        evidenceScore =
+            Math.min(
+                evidenceScore,
+                30
+            );
+
+
+        /*
+         * --------------------------------------------------------
+         * RESOURCE SCORE
+         *
+         * More remaining IP means stronger resource management.
+         *
+         * Maximum = 30
+         * --------------------------------------------------------
+         */
+
+        const remaining =
+            gameState.investigationPoints;
+
+
+        let resourceScore =
+            0;
+
+
+        if (remaining >= 7) {
+
+            resourceScore =
+                30;
+
+        }
+
+        else if (remaining >= 4) {
+
+            resourceScore =
+                25;
+
+        }
+
+        else if (remaining >= 2) {
+
+            resourceScore =
+                20;
+
+        }
+
+        else {
+
+            resourceScore =
+                15;
+
+        }
+
+
+        /*
+         * --------------------------------------------------------
+         * ADAPTABILITY SCORE
+         *
+         * Investigate Contradiction demonstrates adaptation
+         * to new evidence.
+         *
+         * The other two routes still receive a baseline score
+         * because the team had to make and commit to a decision.
+         * --------------------------------------------------------
+         */
+
+        let adaptabilityScore =
+            20;
+
+
+        if (
+            gameState.eventChoice ===
+            "investigate-contradiction"
+        ) {
+
+            adaptabilityScore =
+                30;
+
+        }
+
+
+        /*
+         * --------------------------------------------------------
+         * TOTAL
+         * --------------------------------------------------------
+         */
+
+        const total =
+            evidenceScore +
+            resourceScore +
+            adaptabilityScore;
+
+
+        gameState.scores = {
+
+            evidence:
+                evidenceScore,
+
+            resources:
+                resourceScore,
+
+            adaptability:
+                adaptabilityScore,
+
+            total:
+                total
+
+        };
+
+    }
+
+
+    /* ============================================================
+       RESULTS
+       ============================================================ */
+
+    function showResults() {
+
+        gameState.gameComplete =
+            true;
+
+
+        if (resultsTeam) {
+
+            resultsTeam.textContent =
+                gameState.teamName;
+
+        }
+
+
+        let reconstruction =
+            null;
+
+
+        if (
+            typeof RECONSTRUCTION_OPTIONS !==
+            "undefined" &&
+            Array.isArray(
+                RECONSTRUCTION_OPTIONS
+            )
+        ) {
+
+            reconstruction =
+                RECONSTRUCTION_OPTIONS.find(
+
+                    option =>
+                        option.id ===
+                        gameState.finalReconstruction
+
+                );
+
+        }
+
+
+        if (resultSite) {
+
+            resultSite.textContent =
+                reconstruction
+                    ? reconstruction.title
+                    : "—";
+
+        }
+
+
+        if (scoreEvidence) {
+
+            scoreEvidence.textContent =
+                gameState.scores.evidence;
+
+        }
+
+
+        if (scoreResources) {
+
+            scoreResources.textContent =
+                gameState.scores.resources;
+
+        }
+
+
+        if (scoreAdaptability) {
+
+            scoreAdaptability.textContent =
+                gameState.scores.adaptability;
+
+        }
+
+
+        if (scoreTotal) {
+
+            scoreTotal.textContent =
+                gameState.scores.total;
+
+        }
+
+
+        showScreen(
+            resultsScreen
+        );
+
+    }
+
+
+    /* ============================================================
+       LEARNING
+       ============================================================ */
+
+    function showLearning() {
+
+        if (learningTitle) {
+
+            learningTitle.textContent =
+                "What You Just Experienced";
+
+        }
+
+
+        renderConceptMap();
+
+
+        showScreen(
+            learningScreen
+        );
+
+    }
+
+
+    /* ============================================================
+       CONCEPT MAP
+       ============================================================ */
+
+    function renderConceptMap() {
+
+        if (!conceptMap) {
+
+            return;
+
+        }
+
+
+        conceptMap.innerHTML = `
+
+            <div class="concept-item">
+
+                <strong>
+
+                    Investigation Backlog
+
+                </strong>
+
+                <span>
+
+                    Product Backlog
+
+                </span>
+
+            </div>
+
+
+            <div class="concept-item">
+
+                <strong>
+
+                    Investigation Points
+
+                </strong>
+
+                <span>
+
+                    Sprint Capacity
+
+                </span>
+
+            </div>
+
+
+            <div class="concept-item">
+
+                <strong>
+
+                    Investigation Rounds
+
+                </strong>
+
+                <span>
+
+                    Sprints
+
+                </span>
+
+            </div>
+
+
+            <div class="concept-item">
+
+                <strong>
+
+                    Choosing Investigations
+
+                </strong>
+
+                <span>
+
+                    Sprint Planning
+
+                </span>
+
+            </div>
+
+
+            <div class="concept-item">
+
+                <strong>
+
+                    New Evidence
+
+                </strong>
+
+                <span>
+
+                    Changing Requirements
+
+                </span>
+
+            </div>
+
+
+            <div class="concept-item">
+
+                <strong>
+
+                    Changing Strategy
+
+                </strong>
+
+                <span>
+
+                    Adaptation
+
+                </span>
+
+            </div>
+
+
+            <div class="concept-item">
+
+                <strong>
+
+                    Team Discussion
+
+                </strong>
+
+                <span>
+
+                    Collaboration
+
+                </span>
+
+            </div>
+
+
+            <div class="concept-item">
+
+                <strong>
+
+                    Reviewing Evidence
+
+                </strong>
+
+                <span>
+
+                    Inspection
+
+                </span>
+
+            </div>
+
+
+            <div class="concept-item">
+
+                <strong>
+
+                    Final Reconstruction
+
+                </strong>
+
+                <span>
+
+                    Sprint Review
+
+                </span>
+
+            </div>
+
+
+            <div class="concept-item">
+
+                <strong>
+
+                    What Would You Change?
+
+                </strong>
+
+                <span>
+
+                    Retrospective
+
+                </span>
+
+            </div>
+
+        `;
 
     }
 
@@ -1497,8 +2974,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (startButton) {
 
         startButton.addEventListener(
+
             "click",
+
             startExpedition
+
         );
 
     }
@@ -1507,7 +2987,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (teamNameInput) {
 
         teamNameInput.addEventListener(
+
             "keydown",
+
             event => {
 
                 if (
@@ -1519,6 +3001,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
             }
+
         );
 
     }
@@ -1527,8 +3010,37 @@ document.addEventListener("DOMContentLoaded", () => {
     if (continueDiscovery) {
 
         continueDiscovery.addEventListener(
+
             "click",
+
             continueFromDiscovery
+
+        );
+
+    }
+
+
+    if (submitReconstruction) {
+
+        submitReconstruction.addEventListener(
+
+            "click",
+
+            submitFinalReconstruction
+
+        );
+
+    }
+
+
+    if (viewLearning) {
+
+        viewLearning.addEventListener(
+
+            "click",
+
+            showLearning
+
         );
 
     }

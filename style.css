@@ -1503,3 +1503,211 @@ button:hover {
         margin-bottom: 48px;
     }
 }
+
+/* =========================================================
+   RESULTS — DISTINCT SCREEN
+   ========================================================= */
+
+#screen-results {
+    min-height: 100vh;
+    padding-top: 72px;
+    position: relative;
+}
+
+/* Archive / page marker */
+
+#screen-results::before {
+    content: "FIELD ARCHIVE · EXPEDITION COMPLETE";
+    display: block;
+
+    width: 100%;
+
+    padding-bottom: 18px;
+    margin-bottom: 72px;
+
+    border-bottom: 1px solid #C8B99D;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+
+    color: #716B5F;
+}
+
+/* Strong page separator */
+
+#screen-results::after {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 4px;
+
+    background: #633C2E;
+}
+
+
+/* =========================================================
+   RESULTS CONTENT
+   ========================================================= */
+
+#screen-results .results-layout {
+    max-width: 900px;
+    margin: auto;
+}
+
+#screen-results .eyebrow {
+    color: #A64B32;
+}
+
+#screen-results h1,
+#screen-results #results-title {
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: clamp(48px, 7vw, 92px);
+
+    font-weight: 400;
+    line-height: 0.95;
+
+    letter-spacing: -0.035em;
+
+    color: #292720;
+
+    margin: 12px 0 18px;
+}
+
+#screen-results #results-team {
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: 15px;
+    line-height: 1.7;
+
+    color: #716B5F;
+}
+
+
+/* =========================================================
+   LEARNING — DISTINCT SCREEN
+   ========================================================= */
+
+#screen-learning {
+    min-height: 100vh;
+    padding-top: 72px;
+    position: relative;
+}
+
+/* Archive / page marker */
+
+#screen-learning::before {
+    content: "FIELD ARCHIVE · WHAT YOU JUST LEARNED";
+    display: block;
+
+    width: 100%;
+
+    padding-bottom: 18px;
+    margin-bottom: 72px;
+
+    border-bottom: 1px solid #C8B99D;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+
+    color: #716B5F;
+}
+
+/* Strong page separator */
+
+#screen-learning::after {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 4px;
+
+    background: #633C2E;
+}
+
+
+/* =========================================================
+   LEARNING CONTENT
+   ========================================================= */
+
+#screen-learning .learning-layout {
+    max-width: 1000px;
+    margin: auto;
+}
+
+#screen-learning .eyebrow {
+    color: #A64B32;
+}
+
+#screen-learning h1,
+#screen-learning #learning-title {
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: clamp(48px, 7vw, 88px);
+
+    font-weight: 400;
+    line-height: 0.95;
+
+    letter-spacing: -0.035em;
+
+    color: #292720;
+
+    margin: 12px 0 18px;
+}
+
+#screen-learning .learning-intro {
+    max-width: 780px;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: 17px;
+    line-height: 1.7;
+
+    color: #716B5F;
+}
+
+
+/* =========================================================
+   RESULTS + LEARNING — MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+    #screen-results,
+    #screen-learning {
+        padding-top: 42px;
+    }
+
+    #screen-results::before,
+    #screen-learning::before {
+        margin-bottom: 42px;
+    }
+
+    #screen-results h1,
+    #screen-results #results-title,
+    #screen-learning h1,
+    #screen-learning #learning-title {
+        font-size: 48px;
+    }
+
+    #screen-learning .learning-intro {
+        font-size: 16px;
+    }
+}
