@@ -1711,3 +1711,1165 @@ button:hover {
         font-size: 16px;
     }
 }
+
+/* ============================================================
+   DIG SITE 404
+   COMPLETE RESPONSIVE OVERRIDES
+   Applies to all screens
+   ============================================================ */
+
+
+/* ============================================================
+   GLOBAL TABLET RESPONSIVENESS
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    #app {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .screen {
+        width: 100%;
+        min-height: 100vh;
+        padding: 28px 5vw 32px;
+        overflow-x: hidden;
+    }
+
+
+    /* -------------------------
+       GLOBAL HEADER
+       ------------------------- */
+
+    .game-header {
+        width: 100%;
+        gap: 18px;
+        margin-bottom: 55px;
+    }
+
+    .site-mark {
+        flex-shrink: 0;
+    }
+
+    .header-rule {
+        min-width: 20px;
+    }
+
+    .expedition-status {
+        gap: 18px;
+        flex-shrink: 0;
+    }
+
+
+    /* -------------------------
+       GLOBAL BUTTONS
+       ------------------------- */
+
+    button {
+        max-width: 100%;
+    }
+
+
+    /* -------------------------
+       MISSION
+       ------------------------- */
+
+    .mission-layout {
+        grid-template-columns: 1fr;
+        gap: 42px;
+        max-width: 850px;
+    }
+
+    .mission-intro h1 {
+        font-size: clamp(3.5rem, 10vw, 5.5rem);
+    }
+
+    .mission-description {
+        max-width: 700px;
+    }
+
+    .mission-panel {
+        width: 100%;
+        max-width: 700px;
+    }
+
+    .mission-objective {
+        width: 100%;
+        max-width: 850px;
+        margin-top: 50px;
+    }
+
+    .mission-action {
+        width: 100%;
+        max-width: 850px;
+    }
+
+
+    /* -------------------------
+       EXPEDITION
+       ------------------------- */
+
+    #screen-expedition {
+        overflow-x: hidden;
+    }
+
+    #screen-expedition .game-header {
+        margin-bottom: 55px;
+    }
+
+    #screen-expedition h1 {
+        font-size: clamp(3rem, 8vw, 5rem);
+    }
+
+    .expedition-heading {
+        max-width: 850px;
+        margin-bottom: 35px;
+    }
+
+    .evidence-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+        max-width: 100%;
+        gap: 14px;
+    }
+
+    .evidence-card {
+        min-width: 0;
+    }
+
+
+    /* -------------------------
+       DISCOVERY
+       ------------------------- */
+
+    #screen-discovery {
+        overflow-x: hidden;
+    }
+
+    .discovery-layout {
+        width: 100%;
+        max-width: 850px;
+        min-height: 70vh;
+    }
+
+    .discovery-layout h1,
+    .discovery-layout #discovery-title {
+        max-width: 100%;
+        overflow-wrap: break-word;
+    }
+
+    .discovery-layout > p:not(.eyebrow) {
+        max-width: 100%;
+    }
+
+    .discovery-details {
+        width: 100%;
+        max-width: 100%;
+    }
+
+
+    /* -------------------------
+       EVENT
+       ------------------------- */
+
+    #screen-event {
+        overflow-x: hidden;
+    }
+
+    .event-layout {
+        width: 100%;
+        max-width: 900px;
+    }
+
+    #screen-event h1,
+    #screen-event #event-title {
+        max-width: 100%;
+        overflow-wrap: break-word;
+    }
+
+    #screen-event #event-options,
+    .event-options {
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+
+    #screen-event .event-option,
+    .event-options button {
+        width: 100%;
+    }
+
+
+    /* -------------------------
+       RECONSTRUCTION
+       ------------------------- */
+
+    #screen-reconstruction {
+        overflow-x: hidden;
+    }
+
+    .reconstruction-layout {
+        width: 100%;
+        max-width: 900px;
+    }
+
+    .reconstruction-heading h1 {
+        font-size: clamp(3rem, 8vw, 5rem);
+    }
+
+    .site-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+    }
+
+    .site-option {
+        min-width: 0;
+    }
+
+    .final-evidence {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+    }
+
+    .final-evidence .evidence-choice {
+        min-width: 0;
+    }
+
+    #submit-reconstruction {
+        width: auto;
+        max-width: 100%;
+    }
+
+
+    /* -------------------------
+       RESULTS
+       ------------------------- */
+
+    #screen-results {
+        overflow-x: hidden;
+    }
+
+    .results-layout {
+        width: 100%;
+        max-width: 850px;
+    }
+
+    #screen-results h1,
+    #screen-results #results-title {
+        font-size: clamp(3.2rem, 8vw, 5.5rem);
+        overflow-wrap: break-word;
+    }
+
+    .results-reconstruction {
+        width: 100%;
+    }
+
+    .score-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width: 100%;
+    }
+
+    .score-item {
+        min-width: 0;
+    }
+
+    .score-item strong {
+        font-size: 1.6rem;
+    }
+
+    .final-score {
+        width: 100%;
+    }
+
+
+    /* -------------------------
+       LEARNING
+       ------------------------- */
+
+    #screen-learning {
+        overflow-x: hidden;
+    }
+
+    .learning-layout {
+        width: 100%;
+        max-width: 900px;
+    }
+
+    #screen-learning h1,
+    #screen-learning #learning-title {
+        font-size: clamp(3.2rem, 8vw, 5.5rem);
+        overflow-wrap: break-word;
+    }
+
+    .concept-map {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+    }
+
+    .concept-item {
+        min-width: 0;
+    }
+
+    .learning-conclusion {
+        width: 100%;
+    }
+
+
+    /* -------------------------
+       FOOTER
+       ------------------------- */
+
+    .game-footer {
+        width: 100%;
+    }
+}
+
+
+/* ============================================================
+   LARGE PHONE / SMALL TABLET
+   ============================================================ */
+
+@media (max-width: 650px) {
+
+    /* -------------------------
+       GLOBAL
+       ------------------------- */
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    body {
+        font-size: 15px;
+    }
+
+    .screen {
+        width: 100%;
+        min-height: 100vh;
+        padding: 20px 20px 30px;
+    }
+
+
+    /* -------------------------
+       GLOBAL HEADER
+       ------------------------- */
+
+    .game-header {
+        width: 100%;
+        margin-bottom: 42px;
+        gap: 12px;
+    }
+
+    .site-mark {
+        gap: 8px;
+    }
+
+    .site-number {
+        width: 38px;
+        height: 38px;
+        font-size: 0.75rem;
+    }
+
+    .site-label {
+        display: none;
+    }
+
+    .header-rule {
+        min-width: 15px;
+    }
+
+    .expedition-status {
+        gap: 10px;
+    }
+
+    .expedition-status > div {
+        min-width: 0;
+    }
+
+    .expedition-status span {
+        font-size: 0.52rem;
+    }
+
+    .expedition-status strong {
+        font-size: 0.72rem;
+    }
+
+
+    /* -------------------------
+       TYPOGRAPHY
+       ------------------------- */
+
+    h1 {
+        font-size: clamp(2.8rem, 15vw, 4.5rem);
+    }
+
+    h2 {
+        font-size: 0.85rem;
+    }
+
+    p {
+        max-width: 100%;
+    }
+
+
+    /* -------------------------
+       BUTTONS
+       ------------------------- */
+
+    button {
+        min-height: 48px;
+        padding: 12px 16px;
+    }
+
+
+    /* ========================================================
+       MISSION SCREEN
+       ======================================================== */
+
+    #screen-mission {
+        min-height: 100vh;
+    }
+
+    .mission-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        width: 100%;
+    }
+
+    .mission-intro {
+        width: 100%;
+    }
+
+    .mission-intro h1 {
+        margin-top: 14px;
+        font-size: clamp(3.2rem, 17vw, 5rem);
+        line-height: 0.92;
+    }
+
+    .mission-description {
+        margin-top: 22px;
+        font-size: 0.9rem;
+        line-height: 1.65;
+    }
+
+    .mission-panel {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .panel-heading {
+        gap: 9px;
+        margin-bottom: 14px;
+    }
+
+    .mission-panel > p {
+        font-size: 0.82rem;
+    }
+
+    .mission-details {
+        margin-top: 20px;
+    }
+
+    .detail-item {
+        gap: 12px;
+        padding: 11px 0;
+    }
+
+    .detail-label {
+        font-size: 0.58rem;
+    }
+
+    .detail-item strong {
+        font-size: 0.82rem;
+        text-align: right;
+    }
+
+    .mission-objective {
+        width: 100%;
+        margin: 38px auto 32px;
+        padding-top: 16px;
+        gap: 14px;
+    }
+
+    .objective-marker {
+        flex-shrink: 0;
+        font-size: 0.58rem;
+    }
+
+    .mission-objective p {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .mission-action {
+        width: 100%;
+        margin-bottom: 35px;
+    }
+
+    .mission-action > label {
+        font-size: 0.6rem;
+    }
+
+    .team-entry {
+        width: 100%;
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .team-entry input {
+        width: 100%;
+        min-height: 48px;
+        padding: 13px 14px;
+    }
+
+    .team-entry button {
+        width: 100%;
+    }
+
+
+    /* ========================================================
+       EXPEDITION SCREEN
+       ======================================================== */
+
+    #screen-expedition {
+        padding-top: 42px;
+    }
+
+    #screen-expedition::before {
+        margin-bottom: 42px;
+    }
+
+    #screen-expedition .game-header {
+        margin-bottom: 45px;
+    }
+
+    #screen-expedition .site-mark {
+        font-size: 20px;
+    }
+
+    #screen-expedition h1 {
+        font-size: clamp(2.8rem, 13vw, 4rem);
+        line-height: 0.95;
+        margin-bottom: 16px;
+    }
+
+    #screen-expedition > .container > p,
+    #screen-expedition .screen-subtitle {
+        font-size: 15px;
+        line-height: 1.65;
+    }
+
+    .expedition-heading {
+        width: 100%;
+        margin-bottom: 28px;
+    }
+
+    .evidence-grid {
+        grid-template-columns: 1fr;
+        width: 100%;
+        gap: 12px;
+    }
+
+    .evidence-card {
+        width: 100%;
+        min-height: auto;
+        padding: 18px;
+    }
+
+    .evidence-card h3 {
+        margin: 20px 0 8px;
+        font-size: 1.2rem;
+    }
+
+    .evidence-card p {
+        font-size: 0.78rem;
+        line-height: 1.6;
+    }
+
+    .evidence-cost {
+        margin-top: 18px;
+        padding-top: 11px;
+    }
+
+    .evidence-card button {
+        min-height: 42px;
+    }
+
+    .event-panel {
+        width: 100%;
+        margin: 20px 0;
+        padding: 18px;
+    }
+
+
+    /* ========================================================
+       DISCOVERY SCREEN
+       ======================================================== */
+
+    #screen-discovery {
+        padding-top: 42px;
+    }
+
+    #screen-discovery::before {
+        margin-bottom: 42px;
+    }
+
+    .discovery-layout {
+        width: 100%;
+        min-height: 70vh;
+        justify-content: flex-start;
+    }
+
+    .discovery-symbol {
+        width: 58px;
+        height: 58px;
+        margin: 18px 0;
+        font-size: 1.5rem;
+    }
+
+    .discovery-layout h1,
+    .discovery-layout #discovery-title {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 16px;
+        font-size: clamp(2.7rem, 13vw, 4.2rem);
+        line-height: 0.95;
+    }
+
+    .discovery-layout > p:not(.eyebrow) {
+        width: 100%;
+        margin-top: 18px;
+        font-size: 0.95rem;
+        line-height: 1.65;
+    }
+
+    .discovery-details {
+        width: 100%;
+        margin: 28px 0;
+        padding: 18px;
+        overflow-wrap: break-word;
+    }
+
+    #screen-discovery #continue-discovery {
+        width: 100%;
+        margin-top: 25px;
+    }
+
+
+    /* ========================================================
+       EVENT SCREEN
+       ======================================================== */
+
+    #screen-event {
+        padding-top: 42px;
+    }
+
+    #screen-event::before {
+        margin-bottom: 42px;
+    }
+
+    .event-layout {
+        width: 100%;
+        min-height: 70vh;
+        justify-content: flex-start;
+    }
+
+    .event-symbol {
+        width: 58px;
+        height: 58px;
+        margin: 18px 0;
+        font-size: 1.6rem;
+    }
+
+    #screen-event h1,
+    #screen-event #event-title {
+        width: 100%;
+        max-width: 100%;
+        font-size: clamp(2.7rem, 13vw, 4.2rem);
+        line-height: 0.95;
+        margin-bottom: 20px;
+    }
+
+    #screen-event #event-description {
+        width: 100%;
+        max-width: 100%;
+        font-size: 15px;
+        line-height: 1.65;
+        margin-bottom: 28px;
+    }
+
+    #screen-event #event-options,
+    .event-options {
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    #screen-event .event-option,
+    .event-options button {
+        width: 100%;
+        min-height: 0;
+        padding: 20px;
+    }
+
+    #screen-event .event-option h3 {
+        font-size: 20px;
+        line-height: 1.25;
+    }
+
+    #screen-event .event-option p {
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+
+    /* ========================================================
+       RECONSTRUCTION SCREEN
+       ======================================================== */
+
+    #screen-reconstruction {
+        padding-top: 42px;
+    }
+
+    #screen-reconstruction::before {
+        margin-bottom: 42px;
+    }
+
+    .reconstruction-layout {
+        width: 100%;
+    }
+
+    .reconstruction-heading {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    .reconstruction-heading h1 {
+        font-size: clamp(2.7rem, 13vw, 4.2rem);
+        line-height: 0.95;
+    }
+
+    .reconstruction-heading p:last-child {
+        font-size: 0.9rem;
+        line-height: 1.65;
+    }
+
+    .site-options {
+        grid-template-columns: 1fr;
+        width: 100%;
+        gap: 10px;
+        margin-bottom: 35px;
+    }
+
+    .site-option {
+        width: 100%;
+        padding: 18px;
+    }
+
+    .site-option strong {
+        font-size: 1.05rem;
+    }
+
+    .evidence-selection {
+        width: 100%;
+        padding-top: 20px;
+    }
+
+    .evidence-selection > p {
+        font-size: 0.8rem;
+        line-height: 1.6;
+    }
+
+    .final-evidence {
+        grid-template-columns: 1fr;
+        width: 100%;
+        gap: 9px;
+        margin: 20px 0 25px;
+    }
+
+    .final-evidence .evidence-choice {
+        width: 100%;
+        padding: 15px;
+    }
+
+    #submit-reconstruction {
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    #reconstruction-error {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+
+    /* ========================================================
+       RESULTS SCREEN
+       ======================================================== */
+
+    #screen-results,
+    #screen-learning {
+        padding-top: 42px;
+    }
+
+    #screen-results::before,
+    #screen-learning::before {
+        margin-bottom: 42px;
+    }
+
+    #screen-results .results-layout {
+        width: 100%;
+    }
+
+    #screen-results h1,
+    #screen-results #results-title {
+        width: 100%;
+        font-size: clamp(2.8rem, 14vw, 4.5rem);
+        line-height: 0.95;
+    }
+
+    #screen-results #results-team {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .results-reconstruction {
+        width: 100%;
+        margin: 35px 0 25px;
+        padding: 18px;
+    }
+
+    .results-reconstruction strong {
+        font-size: 1.45rem;
+        line-height: 1.25;
+    }
+
+    .score-grid {
+        grid-template-columns: 1fr;
+        width: 100%;
+        gap: 0;
+    }
+
+    .score-item {
+        width: 100%;
+        padding: 16px 0;
+    }
+
+    .score-item strong {
+        font-size: 1.6rem;
+    }
+
+    .final-score {
+        width: 100%;
+        margin: 32px 0 25px;
+        padding-bottom: 18px;
+        gap: 10px;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .final-score strong {
+        font-size: 3.2rem;
+    }
+
+    .result-note {
+        width: 100%;
+        margin-bottom: 28px;
+        padding: 17px;
+    }
+
+    .result-note p {
+        font-size: 0.8rem;
+        line-height: 1.6;
+    }
+
+
+    /* ========================================================
+       LEARNING SCREEN
+       ======================================================== */
+
+    #screen-learning .learning-layout {
+        width: 100%;
+    }
+
+    #screen-learning h1,
+    #screen-learning #learning-title {
+        width: 100%;
+        font-size: clamp(2.8rem, 14vw, 4.5rem);
+        line-height: 0.95;
+    }
+
+    #screen-learning .learning-intro {
+        width: 100%;
+        font-size: 15px;
+        line-height: 1.65;
+    }
+
+    .concept-map {
+        grid-template-columns: 1fr;
+        width: 100%;
+        margin: 35px 0;
+    }
+
+    .concept-item {
+        width: 100%;
+        padding: 19px;
+    }
+
+    .concept-item strong {
+        font-size: 1.05rem;
+    }
+
+    .learning-conclusion {
+        width: 100%;
+        padding: 22px 0;
+    }
+
+    .learning-conclusion p {
+        font-size: 0.9rem;
+        line-height: 1.65;
+    }
+
+    .learning-conclusion strong {
+        font-size: 1.15rem;
+        line-height: 1.4;
+    }
+
+
+    /* -------------------------
+       FOOTER
+       ------------------------- */
+
+    .game-footer {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        margin-top: 40px;
+        padding-top: 16px;
+        font-size: 0.55rem;
+        line-height: 1.5;
+    }
+}
+
+
+/* ============================================================
+   SMALL PHONES
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+    .screen {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+
+    /* -------------------------
+       HEADER
+       ------------------------- */
+
+    .game-header {
+        gap: 8px;
+        margin-bottom: 35px;
+    }
+
+    .site-number {
+        width: 34px;
+        height: 34px;
+        font-size: 0.7rem;
+    }
+
+    .expedition-status {
+        gap: 7px;
+    }
+
+    .expedition-status span {
+        font-size: 0.48rem;
+        letter-spacing: 0.06em;
+    }
+
+    .expedition-status strong {
+        font-size: 0.68rem;
+    }
+
+
+    /* -------------------------
+       MISSION
+       ------------------------- */
+
+    .mission-intro h1 {
+        font-size: clamp(2.9rem, 18vw, 4rem);
+    }
+
+    .mission-panel {
+        padding: 17px;
+    }
+
+    .mission-objective {
+        gap: 10px;
+    }
+
+    .mission-objective p {
+        font-size: 0.92rem;
+    }
+
+
+    /* -------------------------
+       EXPEDITION
+       ------------------------- */
+
+    #screen-expedition h1 {
+        font-size: clamp(2.6rem, 15vw, 3.5rem);
+    }
+
+    .evidence-card {
+        padding: 16px;
+    }
+
+    .evidence-card h3 {
+        font-size: 1.1rem;
+    }
+
+
+    /* -------------------------
+       DISCOVERY
+       ------------------------- */
+
+    .discovery-layout h1,
+    .discovery-layout #discovery-title {
+        font-size: clamp(2.5rem, 15vw, 3.7rem);
+    }
+
+    .discovery-details {
+        padding: 16px;
+    }
+
+
+    /* -------------------------
+       EVENT
+       ------------------------- */
+
+    #screen-event h1,
+    #screen-event #event-title {
+        font-size: clamp(2.5rem, 15vw, 3.7rem);
+    }
+
+    #screen-event .event-option,
+    .event-options button {
+        padding: 17px;
+    }
+
+
+    /* -------------------------
+       RECONSTRUCTION
+       ------------------------- */
+
+    .reconstruction-heading h1 {
+        font-size: clamp(2.5rem, 15vw, 3.7rem);
+    }
+
+    .site-option {
+        padding: 16px;
+    }
+
+    .final-evidence .evidence-choice {
+        padding: 14px;
+    }
+
+
+    /* -------------------------
+       RESULTS
+       ------------------------- */
+
+    #screen-results h1,
+    #screen-results #results-title {
+        font-size: clamp(2.6rem, 16vw, 4rem);
+    }
+
+    .results-reconstruction {
+        padding: 16px;
+    }
+
+    .final-score strong {
+        font-size: 2.8rem;
+    }
+
+
+    /* -------------------------
+       LEARNING
+       ------------------------- */
+
+    #screen-learning h1,
+    #screen-learning #learning-title {
+        font-size: clamp(2.6rem, 16vw, 4rem);
+    }
+
+    .concept-item {
+        padding: 17px;
+    }
+}
+
+
+/* ============================================================
+   VERY SMALL DEVICES
+   ============================================================ */
+
+@media (max-width: 360px) {
+
+    .screen {
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+
+    .game-header {
+        gap: 6px;
+    }
+
+    .site-number {
+        width: 31px;
+        height: 31px;
+    }
+
+    .expedition-status {
+        gap: 5px;
+    }
+
+    .expedition-status strong {
+        font-size: 0.62rem;
+    }
+
+    .mission-intro h1,
+    #screen-expedition h1,
+    .discovery-layout h1,
+    .discovery-layout #discovery-title,
+    #screen-event h1,
+    #screen-event #event-title,
+    .reconstruction-heading h1,
+    #screen-results h1,
+    #screen-results #results-title,
+    #screen-learning h1,
+    #screen-learning #learning-title {
+        overflow-wrap: anywhere;
+    }
+
+    .detail-item {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .detail-item strong {
+        text-align: left;
+    }
+}
